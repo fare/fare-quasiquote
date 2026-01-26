@@ -179,7 +179,14 @@ Known Issues
   #()` mean something at read-time or at vector-creation-time? Of course, in the
   original intended usage, outside of any quasiquoting, read-time and
   vector-creation-time are one and the same. But what when quasiquote breaks up
-  that identity? Our answer is that it means something at vector-creation-time.
+  that identity? As of 2014,
+  - ECL, LispWorks and fare-quasiquote agree the form evaluates to `#(1 2 3 3 3)`,
+    i.e. the length is enforced at vector-creation-time.
+  - allegro, ccl, clisp, sbcl return the arguably conformant `#(1 2 3 2 3 2 3 2 3)`
+    (of length 9!) which means the length is enforced at read-time,
+    which happens before vector-creation-time.
+  - abcl, cmucl, gcl, xcl all return the arguably completely buggy `#(1 2 3)`
+    which means that the length annotation is ignored inside quasiquoting.
 
 * The CLHS section 2.4.6 says that `(x1 x2 ... xn . atom)` is same as `(append
   [x1] [x2] [x3] ... [xn] (quote atom))` --- mind that the atom is preserved.
